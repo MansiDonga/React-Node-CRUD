@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { create } from "../../services/product.service";
+import { create } from "../../../services/product.service";
 
 function AddProduct() {
   const [addProduct, setAddProduct] = useState({

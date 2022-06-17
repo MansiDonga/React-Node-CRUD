@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { getAll, update, deleteProduct } from "../../services/product.service";
+import { getAll, update, deleteProduct } from "../../../services/product.service";
 
 function GetProducts({ searchedValue }) {
   const [products, setProducts] = useState([]);

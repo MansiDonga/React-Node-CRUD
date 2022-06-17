@@ -15,8 +15,11 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to backend app!" });
 });
 
-db.sequelize.sync();
-require("./routes/product.route")(app);
+db.sequelize.sync({ alter: true });
+
+require("./routes/product.route.js")(app);
+require("./routes/events.route.js")(app);
+require("./routes/members.route.js")(app);
 
 const PORT = process.env.PORT || 8000;
 
