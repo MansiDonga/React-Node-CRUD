@@ -1,8 +1,10 @@
+const bcrypt = require("bcrypt");
+const { v4: uuidv4 } = require("uuid");
 const db = require("../models/db");
 const Members = db.members;
 const Op = db.Sequelize.Op;
 
-exports.create = (req, res) => {
+exports.register = (req, res) => {
   if (
     !req.body.enrollmentNo ||
     !req.body.name ||
@@ -11,7 +13,6 @@ exports.create = (req, res) => {
     !req.body.department ||
     !req.body.batch ||
     !req.body.avatar ||
-    !req.body.username ||
     !req.body.password
   ) {
     res.status(400).send({
@@ -20,28 +21,58 @@ exports.create = (req, res) => {
     return;
   }
 
-  const member = {
-    enrollmentNo: req.body.enrollmentNo,
-    name: req.body.name,
-    email: req.body.email,
-    phone: req.body.phone,
-    department: req.body.department,
-    batch: req.body.batch,
-    avatar: req.body.avatar,
-    username: req.body.username,
-    password: req.body.password,
-    githubid: req.body.githubid,
-    linkedin: req.body.linkedin,
-  };
+  bcrypt.hash(req.body.password, 8, (err, hash) => {
+    let userUUID = uuidv4();
 
-  Members.create(member)
+    let member = {
+      enrollmentNo: "ENO" + req.body.batch + req.body.enrollmentNo,
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      department: req.body.department,
+      batch: req.body.batch,
+      avatar: req.body.avatar,
+      username:
+        !req.body.username ||
+        req.body.username === null ||
+        req.body.username === ""
+          ? userUUID
+          : req.body.username,
+      password: hash,
+      githubid: req.body.githubid,
+      linkedin: req.body.linkedin,
+      uuid: userUUID,
+    };
+
+    Members.create(member)
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the member.",
+        });
+      });
+  });
+};
+
+exports.memberLogin = (req, res) => {
+  // const id = req.params.id;
+  //   bcrypt.compare(myPlaintextPassword, hash).then(function(result) {
+  //     // result == true
+  // });
+
+  console.log(req.body);
+  Members.findOne({
+    where: { username: req.body.username, password: req.body.password },
+  })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the member.",
+        message: err.message || "Some error occurred while retrieving Members.",
       });
     });
 };

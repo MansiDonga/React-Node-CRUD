@@ -42,8 +42,7 @@ module.exports = (sequelize, Sequelize) => {
         defaultValue: "",
       },
       uuid: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.STRING
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,
