@@ -1,31 +1,49 @@
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
+const generator = require("generate-password");
+const jwt = require("jsonwebtoken");
+
 const db = require("../models/db");
 const Members = db.members;
 const Op = db.Sequelize.Op;
 
 exports.register = (req, res) => {
-  if (
-    !req.body.enrollmentNo ||
-    !req.body.name ||
-    !req.body.email ||
-    !req.body.phone ||
-    !req.body.department ||
-    !req.body.batch ||
-    !req.body.avatar ||
-    !req.body.password
-  ) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
+  const ismanual = req.query.ismanual;
+  const passwordConfig = {
+    length: 6,
+    numbers: true,
+    lowercase: true,
+    uppercase: true,
+  };
+
+  if (ismanual === "manual") {
+    if (
+      !req.body.enrollmentNo ||
+      !req.body.name ||
+      !req.body.email ||
+      !req.body.phone ||
+      !req.body.department ||
+      !req.body.batch ||
+      !req.body.avatar ||
+      !req.body.password
+    ) {
+      res.status(400).send({
+        message: "Content can not be empty!",
+      });
+      return;
+    }
   }
 
-  bcrypt.hash(req.body.password, 8, (err, hash) => {
-    let userUUID = uuidv4();
+  var userUUID = uuidv4();
+  var password =
+    !req.body.password || req.body.password !== "" || req.body.password !== null
+      ? generator.generate(passwordConfig)
+      : req.body.password;
 
+  bcrypt.hash(password, 10, (err, hash) => {
+    console.log(hash);
     let member = {
-      enrollmentNo: "ENO" + req.body.batch + req.body.enrollmentNo,
+      enrollmentNo: req.body.enrollmentNo,
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
@@ -46,35 +64,59 @@ exports.register = (req, res) => {
 
     Members.create(member)
       .then((data) => {
-        res.send(data);
+        if (ismanual === "manual") {
+          res.send(data);
+        } else if (ismanual === "qr") {
+          res.send({ userUUID: userUUID, password: password });
+        }
       })
       .catch((err) => {
         res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the member.",
+          message: err.message || "Some error occurred while registering!",
         });
       });
   });
 };
 
-exports.memberLogin = (req, res) => {
-  // const id = req.params.id;
-  //   bcrypt.compare(myPlaintextPassword, hash).then(function(result) {
-  //     // result == true
-  // });
+exports.memberLogin = async (req, res) => {
+  const userDetails = await Members.findOne({
+    where: { username: req.body.username },
+  });
 
-  console.log(req.body);
-  Members.findOne({
-    where: { username: req.body.username, password: req.body.password },
-  })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Members.",
-      });
-    });
+  console.log(userDetails);
+
+  if (!userDetails) {
+    console.log("-------------------- NO USER FOUND --------------------");
+    res.status(401).send("Username is invalid!");
+  } else {
+    bcrypt.compare(
+      req.body.password.toString(),
+      userDetails.password.toString(),
+      (err, res) => {
+        console.log(res);
+        console.log(
+          "------------------------------------------------------",
+          userDetails.password
+        );
+        const pas = bcrypt.hash(req.body.password, 10);
+        console.log(
+          "------------------------------------------------------",
+          pas
+        );
+      }
+    );
+  }
+
+  // authentication successful
+  // const token = jwt.sign(
+  //   {
+  //     data: "foobar",
+  //   },
+  //   "secret",
+  //   { expiresIn: "1h" }
+  // );
+
+  // res.status(200).send(token);
 };
 
 exports.findAll = (req, res) => {
@@ -93,7 +135,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  const id = req.params.id;
+  const id = req.query.id;
   Members.findByPk(id)
     .then((data) => {
       if (data) {

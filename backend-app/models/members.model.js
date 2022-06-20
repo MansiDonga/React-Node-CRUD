@@ -4,21 +4,33 @@ module.exports = (sequelize, Sequelize) => {
     {
       enrollmentNo: {
         type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: "",
       },
       name: {
         type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: "",
       },
       email: {
         type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: "",
       },
       phone: {
         type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: "",
       },
       department: {
         type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: "",
       },
       batch: {
         type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: "",
       },
       avatar: {
         type: Sequelize.STRING,
