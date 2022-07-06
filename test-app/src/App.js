@@ -9,6 +9,7 @@ import TestReducer from "./Components/TestReducer/TestReducer";
 import Registration from "./Components/Registration/Registration";
 import QRCodeGenerator from "./Components/Registration/QRCodeGenerator/QRCodeGenerator";
 import ManualRegistration from "./Components/Registration/ManualRegistration/ManualRegistration";
+import TabChange from "./Components/TabChange/TabChange";
 // import ParticlesBg from "./ParticlesBg";
 
 function App() {
@@ -122,6 +123,7 @@ function App() {
           <Route exact path="/add-product" element={<AddProduct />} />
           <Route exact path="/test-reducer" element={<TestReducer />} />
           <Route path="/register" element={<Registration />} />
+          <Route path="/tabChange" element={<TabChange />} />
           <Route
             path="/register/generate-qr-code"
             element={<QRCodeGenerator />}
