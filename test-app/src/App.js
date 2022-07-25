@@ -9,7 +9,9 @@ import TestReducer from "./Components/TestReducer/TestReducer";
 import Registration from "./Components/Registration/Registration";
 import QRCodeGenerator from "./Components/Registration/QRCodeGenerator/QRCodeGenerator";
 import ManualRegistration from "./Components/Registration/ManualRegistration/ManualRegistration";
-import TabChange from "./Components/TabChange/TabChange";
+import MemberList from "./Components/Members/MemberList";
+import Card1 from "./Components/Card1/Card1";
+import Card2 from "./Components/Card2/Card2";
 // import ParticlesBg from "./ParticlesBg";
 
 function App() {
@@ -71,7 +73,6 @@ function App() {
     //   </div>
     // </div>
     <div className="App">
-      {/* <ParticlesBg /> */}
       <Navbar expand="lg">
         <Container>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -86,8 +87,14 @@ function App() {
                   <Link to={"/add-product"} className="nav-link">
                     Add Product
                   </Link>
-                  <Link to={"/test-reducer"} className="nav-link">
-                    Test Reducer
+                  <Link to={"/members"} className="nav-link">
+                    Members
+                  </Link>
+                  <Link to={"/card1"} className="nav-link">
+                    Card 1
+                  </Link>
+                  <Link to={"/card2"} className="nav-link">
+                    Card 2
                   </Link>
                 </div>
 
@@ -113,6 +120,7 @@ function App() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
       <div className="container mt-3">
         <Routes>
           <Route
@@ -123,7 +131,6 @@ function App() {
           <Route exact path="/add-product" element={<AddProduct />} />
           <Route exact path="/test-reducer" element={<TestReducer />} />
           <Route path="/register" element={<Registration />} />
-          <Route path="/tabChange" element={<TabChange />} />
           <Route
             path="/register/generate-qr-code"
             element={<QRCodeGenerator />}
@@ -132,6 +139,9 @@ function App() {
             path="/register/maunal-register"
             element={<ManualRegistration />}
           />
+          <Route path="/members" element={<MemberList />} />
+          <Route path="/card1" element={<Card1 />} />
+          <Route path="/card2" element={<Card2 />} />
         </Routes>
       </div>
     </div>

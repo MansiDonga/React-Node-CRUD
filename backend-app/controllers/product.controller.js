@@ -33,12 +33,14 @@ exports.findAll = (req, res) => {
 
   Product.findAll()
     .then((data) => {
-      res.send(data);
+      res.send({ data: data, message: "Data Fetched", status: 0 });
     })
     .catch((err) => {
       res.status(500).send({
+        data: [],
         message:
           err.message || "Some error occurred while retrieving products.",
+        status: 1,
       });
     });
 };

@@ -1,17 +1,37 @@
 import * as actions from "../constants/productsConstant";
 
-const productsReducer = (state = [], action) => {
-  switch (action.type) {
+const initialState = [];
+
+export const productsReducer = (state = initialState, { type, payload }) => {
+  switch (type) {
     case actions.GET_PRODUCTS:
-      return { ...state, data: action.payload };
-      
+      return payload;
+
     case actions.ADD_PRODUCTS:
       return {
         ...state,
         data: {
-          productName: action.payload.productName,
-          description: action.payload.description,
-          rate: action.payload.rate,
+          productName: payload.productName,
+          description: payload.description,
+          rate: payload.rate,
+        },
+      };
+
+    case actions.EDIT_PRODUCTS:
+      return {
+        ...state,
+        data: {
+          productName: payload.productName,
+          description: payload.description,
+          rate: payload.rate,
+        },
+      };
+
+    case actions.DELETE_PRODUCTS:
+      return {
+        ...state,
+        data: {
+          id: payload.id,
         },
       };
 
@@ -19,4 +39,3 @@ const productsReducer = (state = [], action) => {
       return state;
   }
 };
-export default productsReducer;

@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { create } from "../../../services/product.service";
 
 function AddProduct() {
@@ -59,15 +60,32 @@ function AddProduct() {
           ></input>
         </div>
 
-        <Link to={"/products"} className="nav-link">
-          <button
-            className="btn btn-primary btn-md mt-5"
-            type="button"
-            onClick={(e) => HandleSaveChanges(e)}
+        <div className="button-wrapper" style={{ width: "fit-content" }}>
+          <Link
+            to={"/products"}
+            className="nav-link"
+            style={{ padding: 0, width: "fit-content", height: "fit-content" }}
           >
-            Save Product
-          </button>
-        </Link>
+            <button
+              className="btn btn-primary btn-md mt-5"
+              type="button"
+              onClick={(e) => HandleSaveChanges(e)}
+            >
+              Save Product
+            </button>
+          </Link>
+        </div>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </form>
     </div>
   );

@@ -1,10 +1,19 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { getAll, update, deleteProduct } from "../../../services/product.service";
+import {
+  getAll,
+  update,
+  deleteProduct,
+} from "../../../services/product.service";
+import Notifications from "../../../shared/Notifications";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../../../actions/productsAction";
 
 function GetProducts({ searchedValue }) {
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.productsReducer);
+  // const [products, setProducts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editProduct, setEditProduct] = useState({
     productName: "",
@@ -23,7 +32,8 @@ function GetProducts({ searchedValue }) {
   function HandleDelete(id) {
     deleteProduct(id).then((data) => {
       getAll().then((data) => {
-        setProducts(data);
+        // setProducts(data.data);
+        dispatch(getAllProducts(data.data));
       });
     });
   }
@@ -45,17 +55,25 @@ function GetProducts({ searchedValue }) {
   function HandleSaveChanges() {
     setShowModal(false);
     update(productID, editProduct).then((data) => {
+      // dispatch(editProduct(editProduct));
       getAll().then((data) => {
-        setProducts(data);
+        // setProducts(data.data);
+        dispatch(getAllProducts(data.data));
       });
     });
   }
 
   useEffect(() => {
     getAll().then((data) => {
-      setProducts(data);
+      if (data.status === 0) {
+        // setProducts(data.data);
+        console.log("GET ALL PRODUCTS", data.data);
+        dispatch(getAllProducts(data.data));
+      } else {
+        Notifications("Loading", data.message);
+      }
     });
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="product-list-wrapper">

@@ -1,0 +1,26 @@
+.members-wrapper .card {
+    border: 1px solid rgba(0, 0, 0, .125) !important;
+}
+
+.card-width {
+    width: 18rem;
+    align-items: center;
+    text-align: center;
+}
+
+.card-img-top {
+    height: 150px;
+    width: 150px;
+    margin: 10px 70px 10px 70px;
+}
+
+.members-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.position-wrapper {
+    color: #a59a9a;
+}
